@@ -14,6 +14,9 @@ const Navbar = () => {
 }
 
 const NavbarWrapper = styled.nav`
+    z-index: 1;
+    position: absolute;
+    width: 100vw;
     padding-top: 25px;
     padding: 0.625rem 0;
     background-color: transparent;

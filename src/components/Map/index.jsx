@@ -1,46 +1,81 @@
-import React, { useState, useCallback } from 'react'
-import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api'
+import React, { useState, useCallback } from "react"
+import styled from "styled-components"
+import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api"
+
+import styles from './style-map.json'
+import FireIcon from "./../../assets/img/fireicon.png"
 
 const { REACT_APP_GOOGLE_MAPS_API_KEY } = process.env
 
 const containerStyle = {
-    width: '100vw',
-    height: '80vh',
-}
+  width: "100vw",
+  height: "80vh",
+};
 
-const center = {    
-    lat: -3.745,
-    lng: -38.523,
-}
+const Map = ({ markers = [] }) => {
+  const [map, setMap] = useState(null);
 
-console.log(REACT_APP_GOOGLE_MAPS_API_KEY)
+  const { isLoaded } = useJsApiLoader({
+    id: "google-map-script",
+    googleMapsApiKey: REACT_APP_GOOGLE_MAPS_API_KEY,
+  });
 
-const Map = ({ markers }) => {
-    const [_, setMap] = useState(null)
+  const onLoad = useCallback(
+    function callback(map) {
+      const bounds = new window.google.maps.LatLngBounds({
+        lat: Number.parseFloat(markers[0].latitude),
+        lng: Number.parseFloat(markers[0].longitude),
+      });
+      map.fitBounds(bounds);
+      setMap(map);
+    },
+    [markers]
+  );
 
-    const { isLoaded } = useJsApiLoader({
-        id: 'google-map-script',
-        googleMapsApiKey: REACT_APP_GOOGLE_MAPS_API_KEY,
-    })
+  const onUnmount = useCallback(function callback(map) {
+    setMap(null);
+  }, []);
 
-    const onLoad = useCallback(function callback(map) {
-        const bounds = new window.google.maps.LatLngBounds(center)
-        map.fitBounds(bounds)
-        setMap(map)
-    }, [])
+  console.log(map);
 
-    const onUnmount = useCallback(function callback(map) {
-        setMap(null)
-    }, [])
+  return isLoaded ? (
+    <MapWrapper>
+      <GoogleMap
+        mapContainerStyle={containerStyle}
+        mapTypeId={"terrain"}
+        zoom={6}
+        onLoad={onLoad}
+        onUnmount={onUnmount}
+        options={{
+          styles,
+          disableDefaultUI: true,
+        }}
+        center={{
+          lat: Number.parseFloat(markers[0].latitude),
+          lng: Number.parseFloat(markers[0].longitude),
+        }}
+      >
+        {markers.map((marker) => (
+          <Marker
+            icon={{
+              url: FireIcon,
+              scaledSize: new window.google.maps.Size(15, 15),
+            }}
+            position={{
+              lat: Number.parseFloat(marker.latitude),
+              lng: Number.parseFloat(marker.longitude),
+            }}
+          />
+        ))}
+      </GoogleMap>
+    </MapWrapper>
+  ) : (
+    ""
+  );
+};
 
-    return isLoaded ? (
-        <GoogleMap
-            mapContainerStyle={containerStyle}
-            center={center}
-            zoom={10}
-            onLoad={onLoad}
-            onUnmount={onUnmount}/>
-    ) : ''
-}
+const MapWrapper = styled.div`
+  z-index: 0;
+`;
 
-export default Map
+export default Map;
