@@ -1,12 +1,16 @@
 import React from 'react'
 import styled from 'styled-components'
 
+import FireBrand from './../../assets/img/firebrand.png'
+
 const Navbar = () => {
     return (
         <NavbarWrapper>
             <NavbarContainer>
                 <NavbarBrand>
-                    Firewatch
+                    <img 
+                        src={FireBrand} 
+                        alt={FireBrand}/>
                 </NavbarBrand>
             </NavbarContainer>
         </NavbarWrapper>
@@ -30,8 +34,12 @@ const NavbarContainer = styled.div`
 `
 
 const NavbarBrand = styled.div`
+    font-weight: bold;
     text-transform: uppercase;
     color: var(--navbar-color);
+    img {
+        width: 8rem;
+    }
 `
 
 export default Navbar
