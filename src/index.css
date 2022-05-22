@@ -16,7 +16,13 @@
   margin: 0;
   padding: 0;
 }
-
+h1{
+  display: flex;
+  margin-top: 20px;
+  justify-content: center;
+  font-family: 'Montserrat', Arial, Helvetica, sans-serif;
+  color: var(--navbar-color);
+}
 body {
   overflow-x: hidden;
   background-color: #2a2b31;

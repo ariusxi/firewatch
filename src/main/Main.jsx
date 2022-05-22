@@ -5,8 +5,10 @@ import Navbar from './../components/Navbar'
 import Map from './../components/Map'
 import Footer from './../components/Footer'
 
+import brasilData from './../data/datasetBrasil_2021.json'
 import markers from './../data/data.json'
 import Raised from '../components/Raised'
+import PieChart from '../components/PieChart'
 
 class Main extends Component {
 
@@ -36,6 +38,8 @@ class Main extends Component {
                         </Row>
                     </Container>
                 </Raised>
+                <h1>Graficos de Queimadas no Brasil</h1>
+                <PieChart dataBrasil={brasilData}/>
                 <Footer copyrightText={'© Firewatch - Todos os direitos reservados.'}/>
             </div>
         )
