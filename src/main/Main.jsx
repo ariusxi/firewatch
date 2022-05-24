@@ -13,23 +13,28 @@ import data from './../data/data.json'
 class Main extends Component {
 
     tabs = [{
-        title: 'Estados',
+        title: 'Estado',
         content: (
             <Chart
                 title='Estados com mais casos de queimadas'
-                chartData={this.filterChartData(data)}/>
+                chartData={this.filterChartData("estado", ['Estado', 'Quantidade'])}/>
             ),
     }, {
-        title: 'Aba 2',
-        content: 'Conteúdo da aba 2',
+        title: 'Biomas',
+        content: (
+        <Chart
+            title='Biomas com mais casos de queimadas'
+            chartData={this.filterChartData("bioma", ['Bioma', 'Quantidade'])}
+            chartType="BarChart"/>
+        ),
     }]
 
     filterMarkersData = () => data.filter((current) => current.pais === 'Brasil')
 
-    filterChartData() {
+    filterChartData(fieldName, labels) {
         const values = data
             .filter((row) => row.pais === 'Brasil')
-            .map((row) => row.estado)
+            .map((row) => row[fieldName])
             .reduce((row, current) => {
                 const property = current
                 row[property] = row[property] || []
@@ -42,7 +47,7 @@ class Main extends Component {
             .map((row, index) => [states[index], row.length])
             .slice(0, 5)
 
-        return [['Estado', 'Quantidade'], ...chart]
+        return [labels, ...chart]
     }
 
     render() {

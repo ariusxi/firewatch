@@ -5,11 +5,11 @@ import styled from 'styled-components'
 const Chart = ({
     title,
     chartData = [],
+    chartType = "PieChart",
     is3D = false,
     textColor = '#fff',
     backgroundColor = '#2a2b31',
 }) => {
-
     const options = {
         title,
         is3D,
@@ -24,15 +24,23 @@ const Chart = ({
                 color: textColor,
             },
         },
+        hAxis: {
+            textStyle:{color: '#FFF'}
+        },
+        vAxis: {
+            textStyle:{color: '#FFF'}
+        },
+         
     }
 
     return (
         <ChartContainer>
             <ChartMD
                 width={'100%'}
-                chartType='PieChart'
+                chartType={chartType}
                 data={chartData} 
-                options={options}/>
+                options={options}
+                />
         </ChartContainer>
     );
 }
