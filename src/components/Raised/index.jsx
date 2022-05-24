@@ -10,7 +10,7 @@ const Raised = ({ children }) => {
 }
 
 const RaisedWrapper = styled.div`
-    padding: 20px;
+    padding: 40px 20px;
     z-index: 100;
     position: relative;
     color: var(--raised-text-color);

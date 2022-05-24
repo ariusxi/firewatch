@@ -9,6 +9,11 @@
   --raised-background-color: #31333b;
   --raised-text-color: #fff;
 
+  --tabs-border-color: #ac423a;
+  --tabs-wrapper-border-color: #454752;
+  --tabs-text-color-active: #ac423a;
+  --tabs-text-color: #fff;
+
   --footer-text-color: #fff;
 }
 
