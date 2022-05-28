@@ -14,33 +14,31 @@ const Chart = ({
         title,
         is3D,
         backgroundColor,
-        titleTextStyle: { 
-            fontFamily: "Montserrat, Arial, Helvetica, sans-serif;", 
+        titleTextStyle: {
+            fontFamily: "Montserrat, Arial, Helvetica, sans-serif;",
             color: textColor,
         },
-        legend: { 
-            fontFamily: "Montserrat, Arial, Helvetica, sans-serif;", 
-            textStyle: { 
+        legend: {
+            fontFamily: "Montserrat, Arial, Helvetica, sans-serif;",
+            textStyle: {
                 color: textColor,
             },
         },
         hAxis: {
-            textStyle:{color: '#FFF'}
+            textStyle: { color: '#FFF' }
         },
         vAxis: {
-            textStyle:{color: '#FFF'}
+            textStyle: { color: '#FFF' }
         },
-         
     }
-
     return (
         <ChartContainer>
             <ChartMD
-                width={'100%'}
+                width="100%"
                 chartType={chartType}
-                data={chartData} 
+                data={chartData}
                 options={options}
-                />
+            />
         </ChartContainer>
     );
 }
