@@ -1,25 +1,30 @@
-import React, { useState, useCallback } from 'react'
+import React, { 
+    Children, 
+    cloneElement, 
+    isValidElement, 
+    useState, 
+    useCallback,
+} from 'react'
 import styled from 'styled-components'
 import {
     GoogleMap,
-    Marker,
     useJsApiLoader,
 } from '@react-google-maps/api'
 
 import Icon from './../Icon'
 
 import styles from './style-map.json'
-import FireIcon from './../../assets/img/fireicon.png'
 
 const DEFAULT_ZOOM_NUMBER = 5
+const libraries = ['visualization']
 const { REACT_APP_GOOGLE_MAPS_API_KEY } = process.env
 
 
-const Map = ({ markers = [], mapWidth = '100vw', mapHeight = '80vh' }) => {
+const Map = ({ center, children, mapWidth = '100vw', mapHeight = '80vh' }) => {
     const [map, setMap] = useState(null);
     const [zoom, setZoom] = useState(DEFAULT_ZOOM_NUMBER)
-
     const { isLoaded } = useJsApiLoader({
+        libraries,
         id: 'google-map-script',
         googleMapsApiKey: REACT_APP_GOOGLE_MAPS_API_KEY,
     })
@@ -31,19 +36,27 @@ const Map = ({ markers = [], mapWidth = '100vw', mapHeight = '80vh' }) => {
 
     const onLoad = useCallback(function callback(map) {
         const bounds = new window.google.maps.LatLngBounds({
-            lat: Number.parseFloat(markers[0].latitude),
-            lng: Number.parseFloat(markers[0].longitude),
+            lat: Number.parseFloat(center.lat),
+            lng: Number.parseFloat(center.lng),
         })
         map.setZoom(DEFAULT_ZOOM_NUMBER)
         map.fitBounds(bounds)
         setMap(map)
-    }, [markers])
+    }, [center])
 
     const onUnmount = useCallback(function callback(map) {
         console.log('Map loaded: ', map)
-
         setMap(null)
     }, [])
+
+    const childrenWithMaps = Children.map(children, (child) => {
+        if (isValidElement(child) && isLoaded) {
+            return cloneElement(child, {
+                googleMaps: window.google.maps,
+            })
+        }
+        return child
+    })
 
     console.log('Map state: ', map)
 
@@ -56,29 +69,14 @@ const Map = ({ markers = [], mapWidth = '100vw', mapHeight = '80vh' }) => {
                 zoom={zoom}
                 onLoad={onLoad}
                 onUnmount={onUnmount}
+                center={center}
                 options={{
                     styles,
                     maxZoom: 8,
                     gestureHandling: 'greedy',
                     disableDefaultUI: true,
-                }}
-                center={{
-                    lat: Number.parseFloat(markers[0].latitude),
-                    lng: Number.parseFloat(markers[0].longitude),
                 }}>
-                {markers.map((marker, index) => (
-                    <Marker
-                        key={index}
-                        icon={{
-                            url: FireIcon,
-                            scaledSize: new window.google.maps.Size(15, 15),
-                        }}
-                        position={{
-                            lat: Number.parseFloat(marker.latitude),
-                            lng: Number.parseFloat(marker.longitude),
-                        }}>
-                    </Marker>
-                ))}
+                {childrenWithMaps}
             </GoogleMap>
             <OptionButtonGroup>
                 <OptionButton onClick={() => setZoom(zoom + 1)}>
@@ -99,7 +97,7 @@ const MapWrapper = styled.div`
 
 const OptionButtonGroup = styled.div`
     position: absolute;
-    top: 60vh;
+    top: 55vh;
     right: 15px;
 `
 

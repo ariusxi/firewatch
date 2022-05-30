@@ -3,7 +3,9 @@ import { Container, Row, Col } from 'react-grid-system'
 
 import Chart from '../components/Chart'
 import Footer from './../components/Footer'
+import Heatmap from './../components/Heatmap'
 import Map from './../components/Map'
+import Markers from './../components/Markers'
 import Navbar from './../components/Navbar'
 import Raised from '../components/Raised'
 import Tabs from '../components/Tabs'
@@ -31,6 +33,15 @@ class Main extends Component {
 
     filterMarkersData = () => data.filter((current) => current.pais === 'Brasil')
 
+    filterHeatmapData() {
+        const values = this.filterMarkersData().map((row) => [
+            row.latitude, 
+            row.longitude,
+        ])
+  
+        return values
+    }
+
     filterChartData(fieldName, labels) {
         const values = data
             .filter((row) => row.pais === 'Brasil')
@@ -51,10 +62,16 @@ class Main extends Component {
     }
 
     render() {
+
         return (
             <div className="Main">
                 <Navbar/>
-                <Map markers={this.filterMarkersData()}/>
+                <Map center={{
+                    lat: Number.parseFloat(data[0].latitude),
+                    lng: Number.parseFloat(data[0].longitude),
+                }}>
+					<Markers data={data}/>
+                </Map>
                 <Raised>
                     <Container>
                         <Row>
@@ -93,7 +110,12 @@ class Main extends Component {
                             <Col md={12}>
                                 <Map 
                                     mapWidth='100%'
-                                    markers={this.filterMarkersData()}/>
+                                    center={{
+                                        lat: Number.parseFloat(data[0].latitude),
+                                        lng: Number.parseFloat(data[0].longitude),
+                                    }}>
+                                    <Heatmap positions={this.filterHeatmapData()}/>
+                                </Map>
                             </Col>
                         </Row>
                     </Container>
