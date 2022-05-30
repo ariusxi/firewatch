@@ -9,9 +9,8 @@ import Markers from './../components/Markers'
 import Navbar from './../components/Navbar'
 import Raised from '../components/Raised'
 import Tabs from '../components/Tabs'
-
 import data from './../data/data.json'
-
+import data_2021 from './../data/data_2021.json'
 class Main extends Component {
 
     tabs = [{
@@ -19,7 +18,8 @@ class Main extends Component {
         content: (
             <Chart
                 title='Estados com mais casos de queimadas'
-                chartData={this.filterChartData("estado", ['Estado', 'Quantidade'])}/>
+                chartData={this.filterChartData("estado", ['Estado', 'Quantidade'])}
+                />
             ),
     }, {
         title: 'Biomas',
@@ -29,8 +29,16 @@ class Main extends Component {
             chartData={this.filterChartData("bioma", ['Bioma', 'Quantidade'])}
             chartType="BarChart"/>
         ),
+    },
+    {
+        title: 'Mês',
+        content: (
+        <Chart
+            title='Meses com mais casos de queimadas no ano de 2021'
+            chartData={this.filterChartDataPerMonth()}
+            chartType="ColumnChart"/>
+        ),
     }]
-
     filterMarkersData = () => data.filter((current) => current.pais === 'Brasil')
 
     filterHeatmapData() {
@@ -52,15 +60,34 @@ class Main extends Component {
                 row[property].push(row)
                 return row
             }, {})
-        
         const states = Object.keys(values)
         const chart = Object.values(values)
             .map((row, index) => [states[index], row.length])
+            .sort((a,b) => b[1]-a[1])
             .slice(0, 5)
 
         return [labels, ...chart]
     }
-
+    
+    filterChartDataPerMonth(){
+        const month = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+        const values = data_2021
+            .filter((row) => row.pais === 'Brasil')
+            .map((row) => month[new Date(row.datahora).getMonth()])
+            .reduce((row, current) => {
+                const property = current
+                row[property] = row[property] || []
+                row[property].push(row)
+                return row
+            }, {})
+        const states = Object.keys(values)
+        const chart = Object.values(values)
+        .map((row, index) => [states[index], row.length])
+        .sort((a,b) => b[1]-a[1])
+        .slice(0,5)
+        return [['Mês','Quantidade'], ...chart]
+    }
+    
     render() {
 
         return (

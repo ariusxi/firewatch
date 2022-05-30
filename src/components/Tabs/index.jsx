@@ -3,7 +3,6 @@ import styled from 'styled-components'
 
 const Tabs = ({ tabs }) => {
     const [tab, setTab] = useState(0)
-
     return tabs ? (
         <TabsWrapper>
             <TabGroupButton>
@@ -32,6 +31,7 @@ const TabsWrapper = styled.div`
     border-top: 1px solid var(--tabs-wrapper-border-color);
     border-bottom: 1px solid var(--tabs-wrapper-border-color);
     margin: 30px 0;
+    width: 100%;
     padding-top: 15px;
     padding-bottom: 25px;
     position: relative;
