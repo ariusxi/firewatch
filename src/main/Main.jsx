@@ -7,44 +7,76 @@ import Map from './../components/Map'
 import Navbar from './../components/Navbar'
 import Raised from '../components/Raised'
 import Tabs from '../components/Tabs'
-
 import data from './../data/data.json'
-
+import data_2021 from './../data/data_2021.json'
 class Main extends Component {
 
     tabs = [{
-        title: 'Estados',
+        title: 'Estado',
         content: (
             <Chart
                 title='Estados com mais casos de queimadas'
-                chartData={this.filterChartData(data)}/>
+                chartData={this.filterChartData("estado", ['Estado', 'Quantidade'])}
+                />
             ),
     }, {
-        title: 'Aba 2',
-        content: 'Conteúdo da aba 2',
+        title: 'Biomas',
+        content: (
+        <Chart
+            title='Biomas com mais casos de queimadas'
+            chartData={this.filterChartData("bioma", ['Bioma', 'Quantidade'])}
+            chartType="BarChart"/>
+        ),
+    },
+    {
+        title: 'Mês',
+        content: (
+        <Chart
+            title='Meses com mais casos de queimadas no ano de 2021'
+            chartData={this.filterChartDataPerMonth()}
+            chartType="ColumnChart"/>
+        ),
     }]
-
     filterMarkersData = () => data.filter((current) => current.pais === 'Brasil')
 
-    filterChartData() {
+    filterChartData(fieldName, labels) {
         const values = data
             .filter((row) => row.pais === 'Brasil')
-            .map((row) => row.estado)
+            .map((row) => row[fieldName])
             .reduce((row, current) => {
                 const property = current
                 row[property] = row[property] || []
                 row[property].push(row)
                 return row
             }, {})
-        
         const states = Object.keys(values)
         const chart = Object.values(values)
             .map((row, index) => [states[index], row.length])
+            .sort((a,b) => b[1]-a[1])
             .slice(0, 5)
 
-        return [['Estado', 'Quantidade'], ...chart]
+        return [labels, ...chart]
     }
-
+    
+    filterChartDataPerMonth(){
+        const month = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+        const values = data_2021
+            .filter((row) => row.pais === 'Brasil')
+            .map((row) => month[new Date(row.datahora).getMonth()])
+            .reduce((row, current) => {
+                const property = current
+                row[property] = row[property] || []
+                row[property].push(row)
+                return row
+            }, {})
+        const states = Object.keys(values)
+        const chart = Object.values(values)
+        .map((row, index) => [states[index], row.length])
+        .sort((a,b) => b[1]-a[1])
+        .slice(0,5)
+        return [['Mês','Quantidade'], ...chart]
+    }
+    
     render() {
         return (
             <div className="Main">
