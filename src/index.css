@@ -1,6 +1,10 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat');
 
 :root {
+	--color-white: #fff;
+
+	--anim-scale: 1.35;
+
 	--float-button-background: #ac423a;
 	--float-button-text-color: #31333b;
 
@@ -9,11 +13,17 @@
 
 	--navbar-color: #ac423a;
 
+	--loader-background-color: #31333b;
+	--loader-text-color: #ac423a;
+
 	--map-background-color-button: #31333b;
 	--map-text-color-button: #fff;
 
 	--raised-background-color: #31333b;
 	--raised-text-color: #fff;
+
+	--select-border-color: #ac423a;
+	--select-text-color: #ac423a;
 
 	--tabs-border-color: #ac423a;
 	--tabs-wrapper-border-color: #454752;
@@ -75,4 +85,49 @@ code {
 
 .MemberIcon:hover {
 	fill: #ffffff;
+}
+
+@keyframes loadspinner {
+	0% {
+	  transform:rotate(0deg);
+	}
+	
+	50% {
+	  transform:rotate(1080deg);
+	}
+	
+	100% {
+	  transform:rotate(1080deg);
+	}
+}
+
+@keyframes loadscaler {
+	0% {
+	  transform:scale(1);
+	}
+	
+	15% {
+	  filter:blur(0);
+	  transform:scale(var(--anim-scale));
+	}
+	
+	25% {
+	  filter:blur(1px);
+	}
+	
+	35% {
+	  filter:blur(0px);
+	}
+	
+	50% {
+	  transform:scale(var(--anim-scale));
+	}
+	
+	55% {
+	  transform:scale(1);
+	}
+	
+	100% {
+	  transform:scale(1);
+	}
 }

@@ -15,6 +15,11 @@ const Navbar = () => {
 							alt={FireBrand}/>
 					</Link>
                 </NavbarBrand>
+				<NavLinks>
+					<Link to={{ pathname: '/about' }}>
+						Quem somos
+					</Link>
+				</NavLinks>
             </NavbarContainer>
         </NavbarWrapper>
     )
@@ -33,6 +38,8 @@ const NavbarWrapper = styled.nav`
 
 const NavbarContainer = styled.div`
     width: 80vw;
+	display: grid;
+    grid-template-columns: repeat(2, 50%);
     margin: 20px auto;
 `
 
@@ -43,6 +50,16 @@ const NavbarBrand = styled.div`
     img {
         width: 8rem;
     }
+`
+
+const NavLinks = styled.div`
+	text-align: right;
+	a {
+		font-weight: bold;
+		color: var(--navbar-color);
+		line-height: 40px;
+		text-decoration: none;
+	}
 `
 
 export default Navbar

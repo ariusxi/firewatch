@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 
 import Footer from '../components/Footer'
+import Loading from './../components/Loading'
 import Map from './../components/Map'
 import Markers from '../components/Markers'
 import Navbar from '../components/Navbar'
@@ -27,10 +28,20 @@ class About extends Component {
 
 	state = {
 		filtered: data.filter((current) => current.pais === 'Brasil'),
+		isLoading: true,
+	}
+
+	componentDidMount() {
+		document.title = 'Sobre nós - Firewatch'
+
+		const self = this
+		setTimeout(() => self.setState({
+			isLoading: false,
+		}), 2000)
 	}
 	
 	render() {
-		const { filtered } = this.state
+		const { filtered, isLoading } = this.state
 
 		const center = {
 			lat: Number.parseFloat(filtered[0].latitude),
@@ -39,6 +50,7 @@ class About extends Component {
 
 		return (
 			<div className='About'>
+				<Loading visible={isLoading}/>
 				<Navbar/>
 				<Map center={center}>
 					<Markers data={filtered}/>
@@ -224,6 +236,7 @@ const ImgMember = styled.img`
 	margin: 40px 0;
 	border: 2px solid var(--member-img-member-border);
 	position: relative;
+	transition: all .2s;
 `
 
 const MemberGroupIcons = styled.div`
