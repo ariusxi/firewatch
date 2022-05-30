@@ -2,16 +2,38 @@ import React, { Component } from 'react'
 import { Container, Row, Col } from 'react-grid-system'
 
 import Chart from '../components/Chart'
-import Footer from './../components/Footer'
-import Heatmap from './../components/Heatmap'
-import Map from './../components/Map'
-import Markers from './../components/Markers'
-import Navbar from './../components/Navbar'
+import Footer from '../components/Footer'
+import FilterMenu from '../components/FilterMenu'
+import Heatmap from '../components/Heatmap'
+import Map from '../components/Map'
+import Markers from '../components/Markers'
+import Navbar from '../components/Navbar'
 import Raised from '../components/Raised'
 import Tabs from '../components/Tabs'
-import data from './../data/data.json'
-import data_2021 from './../data/data_2021.json'
-class Main extends Component {
+
+import data from '../data/data_2021.json'
+
+class Home extends Component {
+
+	state = {
+		filtered: data.filter((current) => current.pais === 'Brasil'),
+		filterMenuShow: false,
+	}
+
+	months = {
+		1: "Janeiro",
+		2: "Fevereiro",
+		3: "Março",
+		4: "Abril",
+		5: "Maio",
+		6: "Junho",
+		7: "Julho",
+		8: "Agosto",
+		9: "Setembro",
+		10: "Outubro",
+		11: "Novembro",
+		12: "Dezembro",
+	}
 
     tabs = [{
         title: 'Estado',
@@ -39,10 +61,15 @@ class Main extends Component {
             chartType="ColumnChart"/>
         ),
     }]
-    filterMarkersData = () => data.filter((current) => current.pais === 'Brasil')
+
+	componentDidUpdate() {
+		console.log('A página carregou')
+	}
+
+	getMonthOptions = () => Object.values(this.months)
 
     filterHeatmapData() {
-        const values = this.filterMarkersData().map((row) => [
+        const values = this.state.filtered.map((row) => [
             row.latitude, 
             row.longitude,
         ])
@@ -51,8 +78,7 @@ class Main extends Component {
     }
 
     filterChartData(fieldName, labels) {
-        const values = data
-            .filter((row) => row.pais === 'Brasil')
+        const values = this.state.filtered
             .map((row) => row[fieldName])
             .reduce((row, current) => {
                 const property = current
@@ -60,44 +86,48 @@ class Main extends Component {
                 row[property].push(row)
                 return row
             }, {})
+		
         const states = Object.keys(values)
         const chart = Object.values(values)
             .map((row, index) => [states[index], row.length])
-            .sort((a,b) => b[1]-a[1])
+            .sort((a,b) => b[1] - a[1])
             .slice(0, 5)
 
         return [labels, ...chart]
     }
     
-    filterChartDataPerMonth(){
-        const month = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
-        const values = data_2021
-            .filter((row) => row.pais === 'Brasil')
-            .map((row) => month[new Date(row.datahora).getMonth()])
+    filterChartDataPerMonth() {
+        const values = this.state.filtered
+            .map((row) => this.months[new Date(row.datahora).getMonth()])
             .reduce((row, current) => {
                 const property = current
                 row[property] = row[property] || []
                 row[property].push(row)
                 return row
             }, {})
+
         const states = Object.keys(values)
         const chart = Object.values(values)
-        .map((row, index) => [states[index], row.length])
-        .sort((a,b) => b[1]-a[1])
-        .slice(0,5)
+			.map((row, index) => [states[index], row.length])
+			.sort((a,b) => b[1]-a[1])
+			.slice(0,5)
         return [['Mês','Quantidade'], ...chart]
     }
     
     render() {
+		const { 
+			filtered, 
+			filterMenuShow, 
+		} = this.state
 
         return (
             <div className="Main">
                 <Navbar/>
                 <Map center={{
-                    lat: Number.parseFloat(data[0].latitude),
-                    lng: Number.parseFloat(data[0].longitude),
+                    lat: Number.parseFloat(filtered[0].latitude),
+                    lng: Number.parseFloat(filtered[0].longitude),
                 }}>
-					<Markers data={data}/>
+					<Markers data={filtered}/>
                 </Map>
                 <Raised>
                     <Container>
@@ -147,6 +177,11 @@ class Main extends Component {
                         </Row>
                     </Container>
                 </Raised>
+				<FilterMenu
+					visible={filterMenuShow}
+					toggleVisible={() => this.setState(() => ({
+						filterMenuShow: !filterMenuShow,
+					}))}/>
                 <Footer copyrightText={'© Firewatch - Todos os direitos reservados.'}/>
             </div>
         )
@@ -155,4 +190,4 @@ class Main extends Component {
 }
 
 
-export default Main
+export default Home
