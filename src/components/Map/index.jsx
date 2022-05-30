@@ -45,7 +45,6 @@ const Map = ({ center, children, mapWidth = '100vw', mapHeight = '80vh' }) => {
     }, [center])
 
     const onUnmount = useCallback(function callback(map) {
-        console.log('Map loaded: ', map)
         setMap(null)
     }, [])
 
@@ -57,8 +56,6 @@ const Map = ({ center, children, mapWidth = '100vw', mapHeight = '80vh' }) => {
         }
         return child
     })
-
-    console.log('Map state: ', map)
 
     return isLoaded ? (
         <MapWrapper>

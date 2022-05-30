@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { Link } from 'react-router-dom'
 
 import FireBrand from './../../assets/img/firebrand.png'
 
@@ -8,9 +9,11 @@ const Navbar = () => {
         <NavbarWrapper>
             <NavbarContainer>
                 <NavbarBrand>
-                    <img 
-                        src={FireBrand} 
-                        alt={FireBrand}/>
+					<Link to={{ pathname: '/' }}>
+						<img 
+							src={FireBrand} 
+							alt={FireBrand}/>
+					</Link>
                 </NavbarBrand>
             </NavbarContainer>
         </NavbarWrapper>
