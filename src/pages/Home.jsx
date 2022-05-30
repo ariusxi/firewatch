@@ -20,7 +20,11 @@ class Home extends Component {
 		filtered: data.filter((current) => current.pais === 'Brasil'),
 		filterMenuShow: false,
 		isLoading: true,
+		filters: [],
 	}
+
+	defaultLat = -15.7801
+	defaultLng = -47.9292
 
 	months = {
 		1: "Janeiro",
@@ -63,6 +67,13 @@ class Home extends Component {
         ),
     }]
 
+	constructor(props) {
+		super(props)
+
+		this.filterData = this.filterData.bind(this)
+		this.resetFilters = this.resetFilters.bind(this)
+	}
+
 	componentDidMount() {
 		document.title = 'Home - Firewatch'
 
@@ -75,13 +86,14 @@ class Home extends Component {
 	getMonthOptions = () => Object.values(this.months)
 
 	getFieldOptions = (fieldName) => {
-		const values = data.map((row) => row[fieldName]).sort(function(a, b){
-			if(a < b) return -1
-			if(a > b) return 1
-			return 0;
-		})
+		const values = data.map((row) => row[fieldName])
+			.sort(function(a, b){
+				if(a < b) return -1
+				if(a > b) return 1
+				return 0;
+			})
 
-		return [...new Set(values)]
+		return [...new Set(values)].filter((current) => current !== '')
 	}
 
 	getBiomeOptions = () => this.getFieldOptions('bioma')
@@ -136,25 +148,63 @@ class Home extends Component {
         return [['Mês','Quantidade'], ...chart]
     }
 
-	filterData() {
+	resetFilters() {
+		this.setState({
+			filters: [],
+			filterMenuShow: false,
+			filtered: data.filter((current) => current.pais === 'Brasil'),
+		})
+	}
 
+	filterData(fieldName, fieldValue) {
+		let { filters } = this.state
+
+		if (fieldValue === '') {
+			filters = filters.filter((currentFilter) => currentFilter.fieldName !== fieldName)
+		} else filters.push({
+			fieldName,
+			fieldValue,
+		})
+
+		let currentFilteredValue = data.filter((current) => current.pais === 'Brasil')
+		for (const currentFilter of filters) {
+			if (currentFilter.fieldName !== 'mes') {
+				currentFilteredValue = currentFilteredValue
+					.filter((current) => current[currentFilter.fieldName] === currentFilter.fieldValue)
+			} else {
+				currentFilteredValue = currentFilteredValue
+					.filter((current) => {
+						const currentMonth = this.months[new Date(current.datahora).getMonth()]
+						return currentMonth && currentMonth === fieldValue
+					})
+			}
+		}
+
+		this.setState({
+			filters,
+			filtered: currentFilteredValue,
+			filterMenuShow: false,
+		})
 	}
     
     render() {
 		const { 
-			filtered, 
+			filtered,
+			filters,
 			filterMenuShow,
 			isLoading,
 		} = this.state
+
+		const center = {
+			lat: Number.parseFloat(filtered.length > 0 ? filtered[0].latitude : this.defaultLat),
+			lng: Number.parseFloat(filtered.length > 0 ? filtered[0].longitude : this.defaultLng),
+		}
 
         return (
             <div className="Main">
 				<Loading visible={isLoading}/>
                 <Navbar/>
-                <Map center={{
-                    lat: Number.parseFloat(filtered[0].latitude),
-                    lng: Number.parseFloat(filtered[0].longitude),
-                }}>
+                <Map center={center}>
 					<Markers data={filtered}/>
                 </Map>
                 <Raised>
@@ -208,6 +258,9 @@ class Home extends Component {
                 </Raised>
 				<FilterMenu
 					visible={filterMenuShow}
+					filters={filters}
+					filterData={this.filterData}
+					resetFilters={this.resetFilters}
 					monthList={this.getMonthOptions()}
 					biomeList={this.getBiomeOptions()}
 					stateList={this.getStateOptions()}
