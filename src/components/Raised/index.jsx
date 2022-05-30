@@ -13,6 +13,7 @@ const RaisedWrapper = styled.div`
     padding: 40px 20px;
     z-index: 100;
     position: relative;
+    text-align: justify;
     color: var(--raised-text-color);
     background-color: var(--raised-background-color);
     margin: -60px 10vw 0;
@@ -23,7 +24,8 @@ const RaisedWrapper = styled.div`
         0 8px 10px -5px rgb(0 0 0 / 20%);
     
     @media only screen and (max-width: 412px) {
-        margin: -60px 30px 0;
+        margin: -60px 0px 0;
+        padding: 40px 10px;
     }
 `
 
