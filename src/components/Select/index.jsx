@@ -1,9 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 
-const Select = ({ list, placeholder }) => {
+const Select = ({ list, placeholder, onChange }) => {
 	return (
-		<SelectField>
+		<SelectField onChange={(e) => onChange(e.target.value)}>
 			<option value="">{placeholder}</option>
 			{list.map((option, key) => (
 				<option value={option} key={key}>{option}</option>

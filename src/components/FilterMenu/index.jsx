@@ -8,18 +8,46 @@ import Select from './../Select'
 const FilterMenu = ({ 
 	visible,
 	toggleVisible,
+	filterData,
+	resetFilters,
+	filters = [],
 	monthList = [], 
 	biomeList = [], 
 	stateList = [], 
 	countyList = [], 
 }) => {
+
+	const getValueField = (fieldName) => {
+		const selectedFilter = filters.find((currentFilter) => currentFilter.fieldName === fieldName)
+		return selectedFilter ? selectedFilter.fieldValue : ''
+	}
+
 	return (
 		<>
 			<FilterMenuWrapper visible={visible}>
-				<Select placeholder="Estado" list={stateList}/>
-				<Select placeholder="Município" list={countyList}/>
-				<Select placeholder="Mês" list={monthList}/>
-				<Select placeholder="Bioma" list={biomeList}/>
+				<Select 
+					placeholder="Estado" 
+					list={stateList}
+					value={getValueField('estado')}
+					onChange={(value) => filterData('estado', value)}/>
+				<Select 
+					placeholder="Município" 
+					list={countyList}
+					value={getValueField('municipio')}
+					onChange={(value) => filterData('municipio', value)}/>
+				<Select 
+					placeholder="Mês" 
+					list={monthList}
+					value={getValueField('mes')}
+					onChange={(value) => filterData('mes', value)}/>
+				<Select 
+					placeholder="Bioma" 
+					list={biomeList}
+					value={getValueField('bioma')}
+					onChange={(value) => filterData('bioma', value)}/>
+				<FilterMenuResetFilter onClick={() => resetFilters()}>
+					Remover filtros
+				</FilterMenuResetFilter>
 			</FilterMenuWrapper>
 			<FloatButton onClick={() => toggleVisible()}>
 				<Icon iconText="filter_list"/>
@@ -47,6 +75,13 @@ const FilterMenuWrapper = styled.div`
 	@media screen and (max-width: 718px) {
 		right: 1.2vw;
 	}
+`
+
+const FilterMenuResetFilter = styled.label`
+	cursor: pointer;
+	color: var(--color-white);
+	font-weight: light;
+	text-decoration: underline;
 `
 
 export default FilterMenu
