@@ -20,7 +20,7 @@ const libraries = ['visualization']
 const { REACT_APP_GOOGLE_MAPS_API_KEY } = process.env
 
 
-const Map = ({ center, children, mapWidth = '100vw', mapHeight = '80vh' }) => {
+const Map = ({ center, children, mapWidth = '100vw', mapHeight = '80vh', marginTop = '0px' }) => {
     const [map, setMap] = useState(null);
     const [zoom, setZoom] = useState(DEFAULT_ZOOM_NUMBER)
     const { isLoaded } = useJsApiLoader({
@@ -32,6 +32,7 @@ const Map = ({ center, children, mapWidth = '100vw', mapHeight = '80vh' }) => {
     const containerStyle = {
         width: mapWidth,
         height: mapHeight,
+		marginTop,
     }
 
     const onLoad = useCallback(function callback(map) {

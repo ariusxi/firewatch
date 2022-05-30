@@ -5,6 +5,7 @@ import Chart from '../components/Chart'
 import Footer from '../components/Footer'
 import FilterMenu from '../components/FilterMenu'
 import Heatmap from '../components/Heatmap'
+import Loading from '../components/Loading'
 import Map from '../components/Map'
 import Markers from '../components/Markers'
 import Navbar from '../components/Navbar'
@@ -18,6 +19,7 @@ class Home extends Component {
 	state = {
 		filtered: data.filter((current) => current.pais === 'Brasil'),
 		filterMenuShow: false,
+		isLoading: true,
 	}
 
 	months = {
@@ -40,33 +42,53 @@ class Home extends Component {
         content: (
             <Chart
                 title='Estados com mais casos de queimadas'
-                chartData={this.filterChartData("estado", ['Estado', 'Quantidade'])}
-                />
-            ),
+                chartData={this.filterChartData("estado", ['Estado', 'Quantidade'])}/>
+        ),
     }, {
         title: 'Biomas',
         content: (
-        <Chart
-            title='Biomas com mais casos de queimadas'
-            chartData={this.filterChartData("bioma", ['Bioma', 'Quantidade'])}
-            chartType="BarChart"/>
+			<Chart
+				title='Biomas com mais casos de queimadas'
+				chartData={this.filterChartData("bioma", ['Bioma', 'Quantidade'])}
+				chartType="BarChart"/>
         ),
     },
     {
         title: 'Mês',
         content: (
-        <Chart
-            title='Meses com mais casos de queimadas no ano de 2021'
-            chartData={this.filterChartDataPerMonth()}
-            chartType="ColumnChart"/>
+			<Chart
+				title='Meses com mais casos de queimadas no ano de 2021'
+				chartData={this.filterChartDataPerMonth()}
+				chartType="ColumnChart"/>
         ),
     }]
 
-	componentDidUpdate() {
-		console.log('A página carregou')
+	componentDidMount() {
+		document.title = 'Home - Firewatch'
+
+		const self = this
+		setTimeout(() => self.setState({
+			isLoading: false,
+		}), 2000)
 	}
 
 	getMonthOptions = () => Object.values(this.months)
+
+	getFieldOptions = (fieldName) => {
+		const values = data.map((row) => row[fieldName]).sort(function(a, b){
+			if(a < b) return -1
+			if(a > b) return 1
+			return 0;
+		})
+
+		return [...new Set(values)]
+	}
+
+	getBiomeOptions = () => this.getFieldOptions('bioma')
+
+	getStateOptions = () => this.getFieldOptions('estado')
+
+	getCountyOptions = () => this.getFieldOptions('municipio')
 
     filterHeatmapData() {
         const values = this.state.filtered.map((row) => [
@@ -113,15 +135,21 @@ class Home extends Component {
 			.slice(0,5)
         return [['Mês','Quantidade'], ...chart]
     }
+
+	filterData() {
+
+	}
     
     render() {
 		const { 
 			filtered, 
-			filterMenuShow, 
+			filterMenuShow,
+			isLoading,
 		} = this.state
 
         return (
             <div className="Main">
+				<Loading visible={isLoading}/>
                 <Navbar/>
                 <Map center={{
                     lat: Number.parseFloat(filtered[0].latitude),
@@ -166,6 +194,7 @@ class Home extends Component {
                             </Col>
                             <Col md={12}>
                                 <Map 
+									marginTop='30px'
                                     mapWidth='100%'
                                     center={{
                                         lat: Number.parseFloat(data[0].latitude),
@@ -179,6 +208,10 @@ class Home extends Component {
                 </Raised>
 				<FilterMenu
 					visible={filterMenuShow}
+					monthList={this.getMonthOptions()}
+					biomeList={this.getBiomeOptions()}
+					stateList={this.getStateOptions()}
+					countyList={this.getCountyOptions()}
 					toggleVisible={() => this.setState(() => ({
 						filterMenuShow: !filterMenuShow,
 					}))}/>
