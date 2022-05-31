@@ -239,7 +239,7 @@ class Home extends Component {
                                 <h3 align="center">Relatório Analítico</h3>
                                 <p>
                                     Para trabalharmos com os dados de queimadas, utilizamos um órgão especializado para o levantamento
-                                    desses dados que o INPE, decidimos optar pelos relatórios mais recentes que o mesmo emitiu para o
+                                    desses dados que foi o INPE, decidimos optar pelos relatórios mais recentes que o mesmo emitiu para o
                                     início do ano de 2021 até o final, com isso podemos analisar alguns fatores bem interessantes com
                                     base no que foi analisado. O dataset disponibilizado pela instituição, tem os dados organizados de
                                     forma que haja a menor quantidade de variáveis para armazenar a maior quantidade de dados possíveis,
