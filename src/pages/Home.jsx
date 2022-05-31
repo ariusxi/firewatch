@@ -45,14 +45,14 @@ class Home extends Component {
         title: 'Estado',
         content: (
             <Chart
-                title='Estados com mais casos de queimadas'
+                title='Estados com mais casos de queimadas no ano de 2021'
                 chartData={this.filterChartData("estado", ['Estado', 'Quantidade'])}/>
         ),
     }, {
         title: 'Biomas',
         content: (
 			<Chart
-				title='Biomas com mais casos de queimadas'
+				title='Biomas com mais casos de queimadas no ano de 2021'
 				chartData={this.filterChartData("bioma", ['Bioma', 'Quantidade'])}
 				chartType="BarChart"/>
         ),
