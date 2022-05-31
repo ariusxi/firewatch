@@ -161,10 +161,17 @@ class Home extends Component {
 
 		if (fieldValue === '') {
 			filters = filters.filter((currentFilter) => currentFilter.fieldName !== fieldName)
+		}
+
+		const indexFilter = filters.findIndex((filter) => filter.fieldName === fieldName)
+		if (indexFilter !== -1) {
+			filters[indexFilter].fieldValue = fieldValue
 		} else filters.push({
 			fieldName,
 			fieldValue,
 		})
+
+		filters = filters.filter((filter) => filter.fieldValue !== '')
 
 		let currentFilteredValue = data.filter((current) => current.pais === 'Brasil')
 		for (const currentFilter of filters) {
