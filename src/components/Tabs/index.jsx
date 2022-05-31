@@ -15,14 +15,13 @@ const Tabs = ({ tabs }) => {
                     </TabButton>
                 ))}
             </TabGroupButton>
-            {tabs.map((currentTab, index) => (
-                <TabContent
-                    md={12}
-                    key={index}
-                    active={index === tab}>
-                    {currentTab.content}
-                </TabContent>
-            ))}
+            {tabs.map((currentTab, index) => index === tab ? ( 
+				<TabContent
+					md={12}
+					key={index}>
+					{currentTab.content}
+				</TabContent>
+			) : '')}
         </TabsWrapper>
     ) : ''
 }
@@ -75,7 +74,7 @@ const TabButton = styled.button`
 const TabContent = styled.div`
     width: 100%;
     position: relative;
-    display: ${({active}) => active ? 'block' : 'none'};
+    display: block;
 `
 
 export default Tabs
