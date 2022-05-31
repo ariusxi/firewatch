@@ -23,7 +23,7 @@ const RaisedWrapper = styled.div`
         0 6px 30px 5px rgb(0 0 0 / 12%), 
         0 8px 10px -5px rgb(0 0 0 / 20%);
     
-    @media only screen and (max-width: 412px) {
+    @media only screen and (max-width: 420px) {
         margin: -60px 0px 0;
         padding: 40px 10px;
     }

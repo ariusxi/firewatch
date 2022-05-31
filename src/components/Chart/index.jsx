@@ -5,6 +5,8 @@ import styled from 'styled-components'
 const Chart = ({
     title,
     chartData = [],
+	width = "100%",
+	height = "300px",
     chartType = "PieChart",
     is3D = false,
     textColor = '#fff',
@@ -34,18 +36,18 @@ const Chart = ({
     return (
         <ChartContainer>
             <ChartMD
-                width="100%"
+				width={width}
+				height={height}
                 chartType={chartType}
                 data={chartData}
-                options={options}
-            />
+                options={options}/>
         </ChartContainer>
     );
 }
 
 const ChartContainer = styled.div`
-    display:flex;
-    width:100%;
+    display: flex;
+    width: 100%;
     justify-content: center;
     align-items: center;
 `
